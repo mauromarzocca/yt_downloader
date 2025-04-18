@@ -16,6 +16,8 @@
 
 ![icon](icon.png)
 
+Versione : 2.0
+
 Questo progetto è un downloader per video e audio da YouTube, che supporta il download di intere playlist. I file scaricati vengono organizzati in una struttura di directory specifica.
 
 ## Struttura delle Directory
