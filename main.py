@@ -10,10 +10,15 @@ def download_yt_video(url, playlist_name):
     create_directory(video_dir)
 
     ydl_opts = {
-        'format': 'bestvideo[height<=1080]',
-        'outtmpl': os.path.join(video_dir, '%(title)s.%(ext)s'),  # Salva i video nella directory specificata
-        'noplaylist': False,  # Permette di scaricare playlist
-        'ignoreerrors': True,  # Ignora i video non disponibili
+        'format': 'bestvideo[height<=1080]+bestaudio/best',  # Scarica video e audio migliori e li unisce
+        'outtmpl': os.path.join(video_dir, '%(title)s.%(ext)s'),
+        'noplaylist': False,
+        'ignoreerrors': True,
+        'merge_output_format': 'mp4',  # Converte il file finale in MP4
+        'postprocessors': [{
+            'key': 'FFmpegVideoConvertor',
+            'preferedformat': 'mp4',
+        }],
     }
 
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
@@ -25,13 +30,13 @@ def download_yt_audio(url, playlist_name):
 
     ydl_opts = {
         'format': 'bestaudio/best',
-        'outtmpl': os.path.join(audio_dir, '%(title)s.%(ext)s'),  # Salva gli audio nella directory specificata
-        'noplaylist': False,  # Permette di scaricare playlist
-        'ignoreerrors': True,  # Ignora i video non disponibili
+        'outtmpl': os.path.join(audio_dir, '%(title)s.%(ext)s'),
+        'noplaylist': False,
+        'ignoreerrors': True,
         'postprocessors': [{
             'key': 'FFmpegExtractAudio',
-            'preferredcodec': 'mp3',  # Puoi cambiare il codec se necessario
-            'preferredquality': '192',  # Qualità audio
+            'preferredcodec': 'mp3',
+            'preferredquality': '192',
         }],
     }
 
@@ -39,10 +44,10 @@ def download_yt_audio(url, playlist_name):
         ydl.download([url])
 
 if __name__ == "__main__":
+    print("Version 2.0")
     choice = input("Vuoi scaricare video o audio? (v/a): ").strip().lower()
     video_url = input("Inserisci l'URL del video o della playlist di YouTube: ")
 
-    # Estrai il nome della playlist dal URL
     playlist_name = video_url.split('list=')[-1] if 'list=' in video_url else 'single_video'
 
     if choice == 'v':
