@@ -16,7 +16,7 @@
 
 ![icon](icon.png)
 
-Versione : 2.0
+Versione : 3.0
 
 Questo progetto è un downloader per video e audio da YouTube, che supporta il download di intere playlist. I file scaricati vengono organizzati in una struttura di directory specifica.
 
@@ -24,7 +24,7 @@ Questo progetto è un downloader per video e audio da YouTube, che supporta il d
 
 I file scaricati verranno salvati nella seguente struttura:
 
-```
+```sh
 
 .
 ├── main.py
@@ -81,6 +81,11 @@ Assicurati di avere `ffmpeg` installato sul tuo sistema. Puoi installarlo seguen
 
 - Se un video non è disponibile nella playlist, verrà automaticamente ignorato e il download continuerà con gli altri video disponibili.
 - Assicurati di avere i permessi necessari per creare directory e scrivere file nel percorso specificato.
+- In caso di problematiche, è nessario effettuare un aggiornaemtno di yt-dlp, tramite il comando:
+
+    ```bash
+        python3 -m pip install -U yt-dlp
+    ```
 
 ## Contributi
 
