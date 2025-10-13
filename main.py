@@ -19,6 +19,21 @@ def clean_filename(name, max_length=100):
     return name[:max_length]
 
 # ────────────────────────────────
+# FUNZIONE DI STATO (barra di avanzamento)
+# ────────────────────────────────
+
+def progress_hook(d):
+    """Mostra lo stato del download in tempo reale."""
+    if d['status'] == 'downloading':
+        percent = d.get('_percent_str', '').strip()
+        speed = d.get('_speed_str', '').strip()
+        eta = d.get('_eta_str', '').strip()
+        sys.stdout.write(f"\r⬇️  {percent} | {speed} | ETA: {eta}   ")
+        sys.stdout.flush()
+    elif d['status'] == 'finished':
+        print("\n✅ Download completato, sto unendo i file...\n")
+
+# ────────────────────────────────
 # FUNZIONI DI DOWNLOAD
 # ────────────────────────────────
 
@@ -33,7 +48,7 @@ def download_yt_video(url, playlist_name):
         'noplaylist': False,
         'ignoreerrors': True,
         'merge_output_format': 'mp4',
-        'player_client': 'android',  # Evita bug di nsig e SSAP
+        'player_client': 'android',  # Evita bug nsig/SSAP
         'postprocessors': [{
             'key': 'FFmpegVideoConvertor',
             'preferedformat': 'mp4',
@@ -70,41 +85,44 @@ def download_yt_audio(url, playlist_name):
         ydl.download([url])
 
 # ────────────────────────────────
-# FUNZIONE DI STATO (barra di avanzamento)
+# BLOCCO PRINCIPALE CON LOOP
 # ────────────────────────────────
 
-def progress_hook(d):
-    """Mostra lo stato del download in tempo reale."""
-    if d['status'] == 'downloading':
-        percent = d.get('_percent_str', '').strip()
-        speed = d.get('_speed_str', '').strip()
-        eta = d.get('_eta_str', '').strip()
-        sys.stdout.write(f"\r⬇️  {percent} | {speed} | ETA: {eta}   ")
-        sys.stdout.flush()
-    elif d['status'] == 'finished':
-        print("\n✅ Download completato, sto unendo i file...\n")
-
-# ────────────────────────────────
-# BLOCCO PRINCIPALE
-# ────────────────────────────────
-
-if __name__ == "__main__":
-    print("=== YouTube Downloader v3.0 ===")
+def main():
+    """Loop principale del programma."""
+    print("=== YouTube Downloader v3.1 ===")
     print("Aggiorna yt-dlp con: python3 -m pip install -U yt-dlp\n")
 
-    choice = input("Vuoi scaricare video o audio? (v/a): ").strip().lower()
-    video_url = input("Inserisci l'URL del video o della playlist di YouTube: ").strip()
+    while True:
+        try:
+            choice = input("Vuoi scaricare video o audio? (v/a): ").strip().lower()
+            if choice not in ('v', 'a'):
+                print("❌ Scelta non valida. Usa 'v' per video o 'a' per audio.\n")
+                continue
 
-    playlist_name = "single_video"
-    if "list=" in video_url:
-        playlist_name = video_url.split("list=")[-1].split("&")[0]
+            video_url = input("Inserisci l'URL del video o della playlist di YouTube: ").strip()
+            if not video_url:
+                print("❌ URL non valido.\n")
+                continue
 
-    try:
-        if choice == 'v':
-            download_yt_video(video_url, playlist_name)
-        elif choice == 'a':
-            download_yt_audio(video_url, playlist_name)
-        else:
-            print("❌ Scelta non valida. Usa 'v' per video o 'a' per audio.")
-    except Exception as e:
-        print(f"\n❌ Errore durante il download: {e}")
+            playlist_name = "single_video"
+            if "list=" in video_url:
+                playlist_name = video_url.split("list=")[-1].split("&")[0]
+
+            if choice == 'v':
+                download_yt_video(video_url, playlist_name)
+            else:
+                download_yt_audio(video_url, playlist_name)
+
+            print("\n🎉 Download completato!\n")
+        except Exception as e:
+            print(f"\n❌ Errore durante il download: {e}\n")
+
+        again = input("Vuoi scaricare un altro video/audio? (s/n): ").strip().lower()
+        if again != 's':
+            print("\n👋 Uscita dal programma. Alla prossima!\n")
+            break
+
+
+if __name__ == "__main__":
+    main()
