@@ -22,6 +22,28 @@ def clean_filename(name, max_length=100):
 # FUNZIONE DI STATO (barra di avanzamento)
 # ────────────────────────────────
 
+class MyLogger:
+    """Logger personalizzato per filtrare warning non critici."""
+    def debug(self, msg):
+        # Ignoriamo i messaggi di debug
+        pass
+
+    def warning(self, msg):
+        # Filtriamo warning noti che non bloccano il download
+        ignored_warnings = [
+            "No supported JavaScript runtime could be found",
+            "forcing SABR streaming",
+            "missing a url", # Spesso associato a SABR streaming
+        ]
+        if any(w in msg for w in ignored_warnings):
+            return
+
+        # Stampiamo gli altri warning
+        print(f"⚠️  WARNING: {msg}")
+
+    def error(self, msg):
+        print(f"❌ ERROR: {msg}")
+
 def progress_hook(d):
     """Mostra lo stato del download in tempo reale."""
     if d['status'] == 'downloading':
@@ -47,12 +69,14 @@ def download_yt_video(url, playlist_name):
         'outtmpl': os.path.join(video_dir, '%(title).100s.%(ext)s'),
         'noplaylist': False,
         'ignoreerrors': True,
+        'nocheckcertificate': True,
         'merge_output_format': 'mp4',
         'player_client': 'android',  # Evita bug nsig/SSAP
         'postprocessors': [{
             'key': 'FFmpegVideoConvertor',
             'preferedformat': 'mp4',
         }],
+        'logger': MyLogger(),
         'progress_hooks': [progress_hook]
     }
 
@@ -71,12 +95,14 @@ def download_yt_audio(url, playlist_name):
         'outtmpl': os.path.join(audio_dir, '%(title).100s.%(ext)s'),
         'noplaylist': False,
         'ignoreerrors': True,
+        'nocheckcertificate': True,
         'player_client': 'android',
         'postprocessors': [{
             'key': 'FFmpegExtractAudio',
             'preferredcodec': 'mp3',
             'preferredquality': '192',
         }],
+        'logger': MyLogger(),
         'progress_hooks': [progress_hook]
     }
 
