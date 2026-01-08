@@ -1,0 +1,49 @@
+import sys
+import core
+
+def cli_progress_callback(msg):
+    """Callback per aggiornare la riga di comando."""
+    # Aggiungiamo spazi alla fine per pulire residui di stringhe precedenti più lunghe
+    sys.stdout.write(f"\r{msg}   ")
+    sys.stdout.flush()
+
+def run_cli():
+    """Loop principale del programma in modalità CLI."""
+    print(f"=== YouTube Downloader CLI v{core.VERSION} ===")
+    print("Aggiorna yt-dlp con: python3 -m pip install -U yt-dlp\n")
+
+    while True:
+        try:
+            choice = input("\nVuoi scaricare video o audio? (v/a): ").strip().lower()
+            if choice not in ('v', 'a'):
+                print("❌ Scelta non valida. Usa 'v' per video o 'a' per audio.")
+                continue
+
+            video_url = input("Inserisci l'URL del video o della playlist di YouTube: ").strip()
+            if not video_url:
+                print("❌ URL non valido.")
+                continue
+
+            playlist_name = core.extract_playlist_name(video_url)
+
+            print("") # Newline prima del download
+            if choice == 'v':
+                core.download_yt_video(video_url, playlist_name, progress_callback=cli_progress_callback)
+            else:
+                core.download_yt_audio(video_url, playlist_name, progress_callback=cli_progress_callback)
+
+            print("\n\n🎉 Download completato!")
+        except Exception as e:
+            print(f"\n\n❌ Errore durante il download: {e}")
+        except KeyboardInterrupt:
+            print("\n\nInterruzione manuale.")
+            break
+
+        print("")
+        again = input("Vuoi scaricare un altro video/audio? (s/n): ").strip().lower()
+        if again != 's':
+            print("\n👋 Uscita dal programma. Alla prossima!\n")
+            break
+
+if __name__ == "__main__":
+    run_cli()

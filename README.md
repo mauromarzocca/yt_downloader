@@ -7,98 +7,85 @@
   - [Dipendenze](#dipendenze)
     - [Installazione di FFmpeg](#installazione-di-ffmpeg)
   - [Utilizzo](#utilizzo)
+  - [Build](#build)
   - [Note](#note)
   - [Contributi](#contributi)
   - [Licenza](#licenza)
-    - [Istruzioni per l'uso](#istruzioni-per-luso)
 
 ---
 
 ![icon](icon.png)
 
-Versione : 4.0
+Versione : 5.1 (GUI + CLI)
 
-Questo progetto è un downloader per video e audio da YouTube, che supporta il download di intere playlist. I file scaricati vengono organizzati in una struttura di directory specifica.
+Questo progetto è un downloader per video e audio da YouTube, disponibile sia con interfaccia grafica (GUI) che da riga di comando (CLI).
 
 ## Struttura delle Directory
 
 I file scaricati verranno salvati nella seguente struttura:
 
 ```sh
-
 .
 ├── main.py
+├── ui.py
+├── cli.py
+├── core.py
 └── download
     ├── audio
-    ├── video
-    └── <nome_playlist>
+    └── video
 ```
 
 ## Dipendenze
 
-Questo progetto richiede `yt-dlp` e `ffmpeg` per il download e la conversione dei file audio. Puoi installare le dipendenze utilizzando `pip`:
+Questo progetto richiede `yt-dlp` e `ffmpeg`.
 
 ```bash
-pip install yt-dlp
+pip install -r requirements.txt
 ```
 
 ### Installazione di FFmpeg
 
-Assicurati di avere `ffmpeg` installato sul tuo sistema. Puoi installarlo seguendo le istruzioni per il tuo sistema operativo:
-
-- **Windows**: Puoi scaricare FFmpeg da [ffmpeg.org](https://ffmpeg.org/download.html) e seguire le istruzioni per l'installazione.
-- **macOS**: Puoi installare FFmpeg utilizzando Homebrew:
-  
-  ```bash
-  brew install ffmpeg
-  ```
-
-- **Linux**: Puoi installare FFmpeg utilizzando il gestore di pacchetti della tua distribuzione. Ad esempio, su Ubuntu:
-
-  ```bash
-  sudo apt update
-  sudo apt install ffmpeg
-  ```
+- **Windows**: [ffmpeg.org](https://ffmpeg.org/download.html).
+- **macOS**: `brew install ffmpeg`
+- **Linux**: `sudo apt install ffmpeg`
 
 ## Utilizzo
 
-1. Clona il repository:
+### Versione Script Python
 
-   ```bash
-   git clone https://github.com/mauromarzocca/yt_downloader.git
-   cd yt_downloader
-   ```
-
-2. Esegui lo script:
-
+1. **GUI (Default)**:
    ```bash
    python main.py
    ```
 
-3. Segui le istruzioni a schermo per scegliere se scaricare video o audio e inserisci l'URL del video o della playlist di YouTube.
+2. **CLI (Riga di Comando)**:
+   ```bash
+   python main.py --cli
+   # oppure
+   python cli.py
+   ```
+
+## Build
+
+Per creare gli eseguibili (GUI e CLI):
+
+1. `pip install -r requirements.txt`
+2. `python build.py`
+
+Troverai due eseguibili nella cartella `dist`:
+- **YouTubeDownloader**: Versione con interfaccia grafica.
+- **YouTubeDownloader-CLI**: Versione da terminale.
 
 ## Note
 
-- Se un video non è disponibile nella playlist, verrà automaticamente ignorato e il download continuerà con gli altri video disponibili.
-- Assicurati di avere i permessi necessari per creare directory e scrivere file nel percorso specificato.
-- In caso di problematiche, è nessario effettuare un aggiornaemtno di yt-dlp, tramite il comando:
-
-    ```bash
-        python3 -m pip install -U yt-dlp
-    ```
+- Se un video non è disponibile, verrà ignorato.
+- Assicurati di avere i permessi di scrittura.
+- Aggiorna yt-dlp se ci sono problemi: `pip install -U yt-dlp`.
 
 ## Contributi
 
-Se desideri contribuire a questo progetto, sentiti libero di aprire un problema o inviare una richiesta di pull.
+Sentiti libero di aprire issue o PR.
 
 ## Licenza
 
-Questo progetto è concesso in licenza sotto la [MIT License](LICENSE).
-
-### Istruzioni per l'uso
-
-- Sostituisci `<URL_DEL_REPOSITORY>` con l'URL del tuo repository Git.
-- Sostituisci `<NOME_DEL_REPOSITORY>` con il nome della cartella del tuo repository.
-- Assicurati di avere un file `LICENSE` se intendi includere una licenza nel tuo progetto.
-
-Puoi copiare e incollare questo testo nel tuo file `README.md` per fornire una documentazione chiara e utile per gli utenti del tuo progetto.
+MIT License.
