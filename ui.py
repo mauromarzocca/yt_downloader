@@ -19,7 +19,7 @@ class DownloaderApp:
     def __init__(self, root):
         self.root = root
         self.root.title(f"YouTube Downloader v{core.VERSION}")
-        self.root.geometry("400x250")
+        self.root.geometry("450x300")
         self.root.resizable(False, False)
 
         try:
@@ -34,7 +34,10 @@ class DownloaderApp:
         self.title_label = ttk.Label(root, text="YouTube Downloader", font=("Helvetica", 16, "bold"))
         self.title_label.pack(pady=(10, 0))
 
-        self.subtitle_label = ttk.Label(root, text="Un programma di Google", font=("Helvetica", 10, "italic"))
+        self.subtitle_label = ttk.Label(root, text="Un programma di Mauro Marzocca", font=("Helvetica", 10, "italic"))
+        self.subtitle_label.pack(pady=(0, 10))
+        
+        self.subtitle_label = ttk.Label(root, text="Versione 5.1", font=("Helvetica", 10, "italic"))
         self.subtitle_label.pack(pady=(0, 10))
 
         # URL Input
