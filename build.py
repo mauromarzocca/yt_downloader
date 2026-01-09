@@ -28,7 +28,7 @@ def build():
         'CFBundleIdentifier': "com.youtubedownloader.app",
         'CFBundleVersion': core.VERSION,
         'CFBundleShortVersionString': core.VERSION,
-        'NSHumanReadableCopyright': "Un programma di Mauro Marzocca",
+        'NSHumanReadableCopyright': "Mauro Marzocca",
     }
 
     # We will generate the spec file content for GUI
