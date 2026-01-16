@@ -28,7 +28,30 @@ def run_cli():
 
             print("") # Newline prima del download
             if choice == 'v':
-                core.download_yt_video(video_url, playlist_name, progress_callback=cli_progress_callback)
+                print("⏳ Analisi risoluzioni disponibili...")
+                resolutions = core.get_video_resolutions(video_url)
+                selected_res = None
+                
+                if resolutions:
+                    print("\nRisoluzioni disponibili:")
+                    for idx, res in enumerate(resolutions, 1):
+                        print(f"{idx}. {res}")
+                    print(f"{len(resolutions)+1}. Migliore disponibile (Default)")
+                    
+                    try:
+                        res_choice = input("\nSeleziona una risoluzione (numero): ").strip()
+                        if res_choice and res_choice.isdigit():
+                            idx = int(res_choice) - 1
+                            if 0 <= idx < len(resolutions):
+                                selected_res = resolutions[idx]
+                                print(f"✅ Selezionato: {selected_res}")
+                    except ValueError:
+                        pass
+                
+                if not selected_res:
+                    print("ℹ️  Uso risoluzione migliore disponibile (o 1080p limit).")
+
+                core.download_yt_video(video_url, playlist_name, progress_callback=cli_progress_callback, resolution=selected_res)
             else:
                 core.download_yt_audio(video_url, playlist_name, progress_callback=cli_progress_callback)
 
