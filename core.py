@@ -6,7 +6,7 @@ import urllib.request
 import json
 
 # Versione dell'applicazione
-VERSION = "6.0"
+VERSION = "6.1"
 REPO_OWNER = "mauromarzocca"
 REPO_NAME = "yt_downloader"
 
