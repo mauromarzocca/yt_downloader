@@ -102,6 +102,65 @@ class DownloaderApp:
 
         # Check FFmpeg on startup
         self.check_dependencies()
+        
+        # Check updates in background
+        self.root.after(2000, self.start_update_check)
+
+    def start_update_check(self):
+        thread = threading.Thread(target=self.check_updates_thread)
+        thread.daemon = True
+        thread.start()
+
+    def check_updates_thread(self):
+        update_info = core.check_for_updates()
+        if update_info:
+            self.root.after(0, lambda: self.show_update_dialog(update_info))
+
+    def show_update_dialog(self, info):
+        dialog = tk.Toplevel(self.root)
+        dialog.title("Aggiornamento Disponibile")
+        dialog.geometry("500x400")
+        dialog.transient(self.root)
+        dialog.grab_set()
+
+        # Header
+        lbl_header = ttk.Label(
+            dialog, 
+            text=f"Nuova versione {info['version']} disponibile!", 
+            font=("Helvetica", 14, "bold"),
+            foreground="green"
+        )
+        lbl_header.pack(pady=15)
+
+        # Changelog area
+        frame_text = ttk.Frame(dialog)
+        frame_text.pack(expand=True, fill="both", padx=20, pady=5)
+        
+        lbl_new = ttk.Label(frame_text, text="Novità:", font=("Helvetica", 10, "bold"))
+        lbl_new.pack(anchor="w")
+
+        text_area = tk.Text(frame_text, height=10, width=50, wrap="word", font=("Courier", 10))
+        text_area.insert("1.0", info['changelog'])
+        text_area.config(state="disabled")
+        
+        scrollbar = ttk.Scrollbar(frame_text, orient="vertical", command=text_area.yview)
+        text_area['yscrollcommand'] = scrollbar.set
+        
+        text_area.pack(side="left", expand=True, fill="both")
+        scrollbar.pack(side="right", fill="y")
+
+        # Buttons
+        btn_frame = ttk.Frame(dialog)
+        btn_frame.pack(pady=20, fill="x")
+
+        def open_browser():
+            import webbrowser
+            if info['url']:
+                webbrowser.open(info['url'])
+            dialog.destroy()
+
+        ttk.Button(btn_frame, text="Scarica Aggiornamento", command=open_browser).pack(side="left", expand=True, padx=10)
+        ttk.Button(btn_frame, text="Ignora", command=dialog.destroy).pack(side="right", expand=True, padx=10)
 
     def check_dependencies(self):
         """Verifica le dipendenze (FFmpeg) all'avvio."""

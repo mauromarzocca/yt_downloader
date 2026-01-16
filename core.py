@@ -2,13 +2,59 @@ import os
 import yt_dlp
 import sys
 import shutil
+import urllib.request
+import json
 
 # Versione dell'applicazione
 VERSION = "6.0"
+REPO_OWNER = "mauromarzocca"
+REPO_NAME = "yt_downloader"
 
 # ────────────────────────────────
 # FUNZIONI DI SUPPORTO
 # ────────────────────────────────
+
+def check_for_updates():
+    """
+    Controlla se esiste una nuova versione su GitHub.
+    Restituisce un dizionario con {version, changelog, url} se c'è update, altrimenti None.
+    """
+    try:
+        api_url = f"https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/releases/latest"
+        with urllib.request.urlopen(api_url, timeout=3) as response:
+            data = json.loads(response.read().decode())
+            
+            latest_version = data.get("tag_name", "").strip().lstrip("v") # rimuove 'v' se presente
+            current_version = VERSION.strip()
+            
+            # Confronto versioni molto semplice (presuppone formato x.y)
+            # Se necessario, si può usare una logica più complessa
+            if is_newer_version(latest_version, current_version):
+                return {
+                    "version": latest_version,
+                    "changelog": data.get("body", "Nessun dettaglio disponibile."),
+                    "url": data.get("html_url", "")
+                }
+    except Exception:
+        # Silenzia errori di rete o parsing per non disturbare l'utente
+        pass
+    
+    return None
+
+def is_newer_version(remote, local):
+    """Confronta due stringhe di versione x.y.z."""
+    try:
+        r_parts = [int(p) for p in remote.split('.')]
+        l_parts = [int(p) for p in local.split('.')]
+        
+        # Padding con 0 per lunghezze diverse
+        length = max(len(r_parts), len(l_parts))
+        r_parts.extend([0] * (length - len(r_parts)))
+        l_parts.extend([0] * (length - len(l_parts)))
+        
+        return r_parts > l_parts
+    except ValueError:
+        return False # Fallback se formato non numerico
 
 def get_ffmpeg_path():
     """Tenta di trovare il percorso di ffmpeg."""

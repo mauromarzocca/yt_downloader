@@ -10,7 +10,17 @@ def cli_progress_callback(msg):
 def run_cli():
     """Loop principale del programma in modalità CLI."""
     print(f"=== YouTube Downloader CLI v{core.VERSION} ===")
-    print("Aggiorna yt-dlp con: python3 -m pip install -U yt-dlp\n")
+    print("Aggiorna yt-dlp con: python3 -m pip install -U yt-dlp")
+
+    # Controlla aggiornamenti
+    print("\n🔍 Controllo aggiornamenti...", end="", flush=True)
+    update = core.check_for_updates()
+    if update:
+        print(f"\r✨ NUOVA VERSIONE DISPONIBILE: v{update['version']} ✨")
+        print(f"Novità: {update['changelog'].splitlines()[0]}...") # Mostra solo prima riga
+        print(f"Scarica qui: {update['url']}\n")
+    else:
+        print("\rAggiornamenti: Nessun aggiornamento disponibile.   \n")
 
     while True:
         try:
