@@ -16,7 +16,7 @@
 
 ![icon](icon.png)
 
-Versione : 6.0 (GUI + CLI)
+Versione : 6.1 (GUI + CLI)
 
 Questo progetto è un downloader per video e audio da YouTube, disponibile sia con interfaccia grafica (GUI) che da riga di comando (CLI).
 
