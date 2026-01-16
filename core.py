@@ -4,7 +4,7 @@ import sys
 import shutil
 
 # Versione dell'applicazione
-VERSION = "5.1"
+VERSION = "6.0"
 
 # ────────────────────────────────
 # FUNZIONI DI SUPPORTO

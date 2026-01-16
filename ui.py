@@ -19,7 +19,7 @@ class DownloaderApp:
     def __init__(self, root):
         self.root = root
         self.root.title(f"YouTube Downloader v{core.VERSION}")
-        self.root.geometry("500x500") # Increased height
+        self.root.geometry("600x600") # Increased height
         self.root.resizable(False, False)
 
         self.custom_download_path = None
