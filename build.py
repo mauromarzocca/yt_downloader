@@ -5,7 +5,7 @@ import core
 
 def build():
     # Install requirements
-    subprocess.check_call([sys.executable, "-m", "pip", "install", "-r", "requirements.txt"])
+    subprocess.check_call([sys.executable, "-m", "pip", "install", "-U", "-r", "requirements.txt"])
 
     print(f"Building YouTube Downloader v{core.VERSION} for {sys.platform}...")
 
@@ -99,7 +99,7 @@ app = BUNDLE(
         f.write(spec_content_gui)
 
     print("Building GUI from spec...")
-    subprocess.check_call(["pyinstaller", "--clean", "YouTubeDownloader.spec"])
+    subprocess.check_call(["pyinstaller", "--clean", "--noconfirm", "YouTubeDownloader.spec"])
 
     # ---------------------------------------------------------
     # CLI Build (simpler, usually no need for Bundle/Info.plist on macOS console apps in same way)
@@ -112,6 +112,7 @@ app = BUNDLE(
         "--name=YouTubeDownloader-CLI",
         "--onefile",
         "--console",
+        "--noconfirm",
         "--clean",
         f"--add-data=icon.png{sep}.",
         "cli_entry.py"

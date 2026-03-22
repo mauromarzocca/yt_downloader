@@ -6,7 +6,7 @@ import urllib.request
 import json
 
 # Versione dell'applicazione
-VERSION = "6.1"
+VERSION = "7.0"
 REPO_OWNER = "mauromarzocca"
 REPO_NAME = "yt_downloader"
 
@@ -136,6 +136,12 @@ class MyLogger:
 
     def error(self, msg):
         print(f"❌ ERROR: {msg}")
+        try:
+            import os
+            with open(os.path.join(os.path.expanduser("~"), "Desktop", "YouTubeDownloader_Errore.txt"), "a") as f:
+                f.write(f"ERROR: {msg}\\n")
+        except:
+            pass
 
 def make_progress_hook(callback):
     """Crea una funzione hook che invoca la callback con lo stato."""
